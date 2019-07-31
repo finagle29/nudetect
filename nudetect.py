@@ -603,13 +603,15 @@ class Source:
         }
     }
 
+    pwd = os.path.dirname(os.path.abspath(__file__))
+
     # The directory in which 'lara'-style ascii files of emission line
     # data are stored.
-    line_data_dir = 'isotope_data'
+    line_data_dir = os.path.join(pwd, 'isotope_data')
 
     # The directory that contains the CSV file of X-ray sources used by the 
     # detector test lab.
-    source_csv_path = 'xray_sources.csv'
+    source_csv_path = os.path.join(pwd, 'xray_sources.csv')
 
     # A DataFrame containing the sources used by the detector test lab.
     source_df = pd.read_csv(source_csv_path, 
