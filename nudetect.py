@@ -2451,6 +2451,7 @@ class Noise(Experiment):
         self._mean_map = mean_map
         self.count_map = count_map
         self._quick_fit_data = fit_data
+        self._chan_map = chan_map
         # Set '_gain_corrected' way down here to make sure the maps of 
         # FWHM and mean were successfully generated.
         self._gain_corrected = gain_bool
@@ -2632,6 +2633,11 @@ class Noise(Experiment):
         # Pixel column indices
         col_inds = self._col_iter
 
+        chan_maps = [[[[]
+            for col in range(self._num_cols + 2)]
+            for row in range(self._num_rows + 2)]
+            for cap in range(self.num_caps)]
+
         # Initializing a DataFrame to store information about how the 
         # fitting went for each pixel and starting capacitor.
         index = pd.MultiIndex.from_product([cap_inds, row_inds, col_inds],
@@ -2687,6 +2693,7 @@ class Noise(Experiment):
                 for col in range(self._num_cols)] 
                 for row in range(self._num_rows)])
             count_maps[start_cap] = count_map
+            chan_maps[start_cap] = chan_map
            
             # Generate a fwhm map of noise, and plot the gaussian fit to each 
             # pixel's spectrum.
@@ -2769,6 +2776,7 @@ class Noise(Experiment):
         self._mean_maps = mean_maps
         self.count_maps = count_maps
         self._full_fit_data = fit_data
+        self._chan_maps = chan_maps
         # Set '_gain_corrected' way down here to make sure the maps of 
         # FWHM and mean were successfully generated.
         self._gain_corrected = gain_bool
