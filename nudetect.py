@@ -1690,9 +1690,9 @@ class Experiment:
 
         # The 'extent' kwarg is necessary to make axes flush to the image.
         extent = (self._start_col, self._end_col, 
-            self._start_row, self._end_row)
+            self._end_row, self._start_row)
         plt.imshow(values, vmin=vmin, vmax=vmax, extent=extent,
-            cmap=cmap)
+            origin='upper', cmap=cmap)
 
         c = plt.colorbar()
         c.set_label(cb_label, labelpad=10)
@@ -1702,6 +1702,8 @@ class Experiment:
             ticks = np.arange(0, 36, 8)
             plt.xticks(ticks)
             plt.yticks(ticks)
+
+        plt.gca().xaxis.tick_top()
 
         plt.title(title)
 
