@@ -3772,9 +3772,9 @@ class GammaFlood(Experiment):
         mask = pd.Series(np.ones_like(self.raw_data_1d.loc[:, 'STIM']))
 
         if mask_STIM:
-            mask *= self.raw_data_1d.loc[:, 'STIM'] == 0
+            mask &= (self.raw_data_1d.loc[:, 'STIM'] == 0)
         if mask_PH:
-            mask *= self.raw_data_1d.loc[:, 'PH'] > 0
+            mask &= (self.raw_data_1d.loc[:, 'PH'] > 0)
 
         # Generate the count_map from event data
         count_map = np.zeros(self._det_shape, dtype='uint32')
@@ -3785,8 +3785,7 @@ class GammaFlood(Experiment):
                 row_mask = self.raw_data_1d.loc[:, 'RAWY'] == row
                 maprow = row - self._start_row
                 mapcol = col - self._start_col
-                count_map[maprow, mapcol] = np.sum(np.multiply(
-                    mask, np.multiply(col_mask, row_mask)))
+                count_map[maprow, mapcol] = (mask & col_mask & row_mask).values.sum()
 
         # Masking pixels that were turned off, before calculating
         # the rest of the masks (otherwise they'll skew mean and stddev)
