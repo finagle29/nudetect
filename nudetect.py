@@ -1542,9 +1542,9 @@ class Experiment:
             raise ValueError("'text_pos' can be either 'right' or 'left'. "
                 + f"Instead {text_pos} was passed.")
 
-        plt.text(left_side, 0.9, f'Mean = {mean}{text_units}', 
+        plt.text(left_side, 0.9, f'Mean = {mean:.2f}{text_units}',
             fontsize=14, transform=ax.transAxes)
-        plt.text(left_side, 0.8, f'1-Sigma = {stdv}{text_units}', 
+        plt.text(left_side, 0.8, f'1-Sigma = {stdv:.2f}{text_units}',
             fontsize=14, transform=ax.transAxes)
 
         plt.xlabel(f'{xlabel}{axis_units}')
