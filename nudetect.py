@@ -3801,7 +3801,7 @@ class GammaFlood(Experiment):
             count_map = np.ma.masked_greater(count_map, mask_value)
 
         if mask_sigma_below is not None:
-            mask_value_below = np.mean(count_map)\
+            mask_value = np.mean(count_map)\
                 - (np.std(count_map) * mask_sigma_below)
             count_map = np.ma.masked_less(count_map, mask_value)
 
