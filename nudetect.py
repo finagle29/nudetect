@@ -3820,7 +3820,8 @@ class GammaFlood(Experiment):
     def gen_quick_gain(self, energy=None, chan_range=None, gain_estimate=0.014,
         search_width=3000, fit_below=100, fit_above=200, interpolations=2,
         save_plot=True, plot_dir='', plot_subdir='', plot_ext='.pdf', 
-        save_data=True, data_dir='', data_subdir='', data_ext='.txt'):
+        save_data=True, data_dir='', data_subdir='', data_ext='.txt',
+	misc_mask=1):
         '''
         Generates gain correction data from the raw gamma flood event data.
         Currently, the fitting done might fail for sources other than Am241.
@@ -3900,6 +3901,9 @@ class GammaFlood(Experiment):
             data_ext: str
                 The file name extension for the gain file. 
                 (default: '.txt')
+            misc_mask: 1D numpy.array-like
+                An additional mask to be applied to the raw pulse height data.
+                (default: 1)
 
         Return:
             gain: 2D numpy.ndarray
@@ -3938,7 +3942,7 @@ class GammaFlood(Experiment):
                 # since we don't need the index of the original DataFrame, and
                 # np.histogram should be faster on an ndarray than a DataFrame.
                 channel = self.raw_data_1d.loc[
-                    (col_mask) & (row_mask), 'PH'].values
+                    (col_mask) & (row_mask) & (misc_mask), 'PH'].values
 
                 # If there were events at this pixel, fit the strongest peak
                 # in the channel spectrum with a Gaussian.
