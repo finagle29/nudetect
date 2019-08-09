@@ -4038,7 +4038,7 @@ class GammaFlood(Experiment):
 
 
     def gen_spectrum(self, gain=None, bins=10000, energy_range=(0.01, 120), 
-        save_data=True, data_ext='.txt', data_dir='', data_subdir=''):
+        save_data=True, data_ext='.txt', data_dir='', data_subdir='', misc_mask=1):
         '''
         Applies gain correction to get energy data, and then bins the events
         by energy to obtain a spectrum.
@@ -4076,6 +4076,9 @@ class GammaFlood(Experiment):
             data_ext: str
                 The file name extension for the count_map file. 
                 (default: '.txt')
+            misc_mask: 1D numpy.array-like
+                An additional mask to be applied to the raw pulse height data.
+                (default: 1)
 
         Return:
             spectrum: 2D numpy.ndarray
@@ -4121,7 +4124,7 @@ class GammaFlood(Experiment):
                 mapcol = col - self._start_col
                 # Getting PH_COM values ('pulses') of all events at current 
                 # pixel and storing as an ndarray in 'pulses'.
-                pulses = ph_com.loc[(row_mask) & (col_mask)].values
+                pulses = ph_com.loc[(row_mask) & (col_mask) & (misc_mask)].values
                 # The gain for the 3 x 3 grid around this pixel
                 gain_grid = gain[maprow:maprow + 3, mapcol:mapcol + 3]
                 # iterating through the PH_COM values for this pixel
