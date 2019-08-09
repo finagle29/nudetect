@@ -1632,7 +1632,7 @@ class Experiment:
             if not cb_label: 
                 cb_label = 'Gain (eV/channel)'
             if values is None: 
-                values = self.gain
+                values = self.gain * 1000
             if title == 'auto':
                 title = self.title('Gain Map')
 
