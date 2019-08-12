@@ -4114,6 +4114,10 @@ class GammaFlood(Experiment):
 
         # 'energies' is a list of event energies in keV.
         energies = []
+        energy_map = [[[]
+            for col in range(self._num_cols)]
+            for row in range(self._num_rows)]
+
         # iterating through pixels in the selected region
         for row in self._row_iter:
             row_mask = self.raw_data_1d.loc[:, 'RAWY'] == row
@@ -4135,8 +4139,11 @@ class GammaFlood(Experiment):
                     mask = (pulse_grid > 0).astype(int)
                     energies.append(np.sum(np.multiply(
                         np.multiply(mask, pulse_grid), gain_grid)))
+                    energy_map[row][col].append(
+                        (mask * pulse_grid * gain_grid).sum())
 
         # Binning by energy
+        energies = [e for row in energy_map for col in row for e in col]
         counts, edges = np.histogram(energies, bins=bins, range=energy_range)
         del energies
 
@@ -4153,6 +4160,7 @@ class GammaFlood(Experiment):
             np.savetxt(save_path, spectrum)
 
         self.spectrum = spectrum
+        self._energy_map = energy_map
 
         return spectrum
 
