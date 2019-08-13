@@ -3821,7 +3821,7 @@ class GammaFlood(Experiment):
         search_width=3000, fit_below=100, fit_above=200, interpolations=2,
         save_plot=True, plot_dir='', plot_subdir='', plot_ext='.pdf', 
         save_data=True, data_dir='', data_subdir='', data_ext='.txt',
-	misc_mask=1):
+	misc_mask=1, etc=''):
         '''
         Generates gain correction data from the raw gamma flood event data.
         Currently, the fitting done might fail for sources other than Am241.
@@ -3904,6 +3904,10 @@ class GammaFlood(Experiment):
             misc_mask: 1D numpy.array-like
                 An additional mask to be applied to the raw pulse height data.
                 (default: 1)
+            etc: str
+                Other important information (e.g. masks used) that will be
+                appended to data and plot filenames.
+                (default: '')
 
         Return:
             gain: 2D numpy.ndarray
@@ -3913,11 +3917,13 @@ class GammaFlood(Experiment):
 
         if save_data:
             data_path = self.construct_path('data', ext=data_ext, 
-                description='gain', save_dir=data_dir, subdir=data_subdir)
+                description='gain', save_dir=data_dir, subdir=data_subdir,
+                etc=etc)
 
         if save_plot:
             plot_path = self.construct_path('plot', description='gain', 
-                ext=plot_ext,  save_dir=plot_dir, subdir=plot_subdir)
+                ext=plot_ext,  save_dir=plot_dir, subdir=plot_subdir,
+                etc=etc)
 
         # Setting parameters of this emission line to help with fitting it
         # later. 'energy' is the line's energy in keV. 'chan_low' and 
@@ -4038,7 +4044,8 @@ class GammaFlood(Experiment):
 
 
     def gen_spectrum(self, gain=None, bins=10000, energy_range=(0.01, 120), 
-        save_data=True, data_ext='.txt', data_dir='', data_subdir='', misc_mask=1):
+        save_data=True, data_ext='.txt', data_dir='', data_subdir='',
+        misc_mask=1, etc=''):
         '''
         Applies gain correction to get energy data, and then bins the events
         by energy to obtain a spectrum.
@@ -4056,7 +4063,7 @@ class GammaFlood(Experiment):
                 The bins will be made between these energies
                 (default: (0.01, 120))
             save_data:
-                If True, 'spectrum' will be saved as an ascii file. Parameters 
+                If True, 'spectrum' will be saved as an ascii file. Parameters
                 relevant to this saving are below
             data_dir: str
                 The directory to which the file will be saved, overriding any
@@ -4079,19 +4086,24 @@ class GammaFlood(Experiment):
             misc_mask: 1D numpy.array-like
                 An additional mask to be applied to the raw pulse height data.
                 (default: 1)
+            etc: str
+                Other important information (e.g. masks used) that will be
+                appended to data and plot filenames.
+                (default: '')
 
         Return:
             spectrum: 2D numpy.ndarray
                 This array represents a histogram wrt the energy of an event.
                 spectrum[0] is a 1D array of counts in each bin, and  
-                spectrum[1] is a 1D array of the middle enegies of each bin in 
+                spectrum[1] is a 1D array of the middle enegies of each bin in
                 keV. E.g., if the ith bin counted events between 2 keV and 4 
                 keV, then the value of spectrum[1, i] is 3.
         '''
         # Generating the save path, if needed.
         if save_data:
             save_path = self.construct_path('data', ext=data_ext, 
-                save_dir=data_dir, subdir=data_subdir, description='spectrum')
+                save_dir=data_dir, subdir=data_subdir, description='spectrum',
+                etc=etc)
 
         # If no gain is passed, take it from the GammaFlood instance.
         if gain is None:
@@ -4170,8 +4182,8 @@ class GammaFlood(Experiment):
     #
 
     def plot_spectrum(self, energy=None, spectrum=None, fit_below=80, 
-        fit_above=150, title='', save_plot=True, plot_ext='.pdf', plot_dir='', 
-        plot_subdir=''):
+        fit_above=150, title='', save_plot=True, plot_ext='.pdf', plot_dir='',
+        plot_subdir='', etc=''):
         '''
         Fits and plots the spectrum returned from 'get_spectrum'. To show the 
         plot with an interactive interface, call 'plt.show()' right after 
@@ -4181,7 +4193,7 @@ class GammaFlood(Experiment):
             spectrum: 2D numpy.ndarray
                 This array represents a histogram wrt the energy of an event.
                 spectrum[0] is a 1D array of counts in each bin, and  
-                spectrum[1] is a 1D array of the middle enegies of each bin in 
+                spectrum[1] is a 1D array of the middle enegies of each bin in
                 keV. E.g., if the ith bin counted events between 2 keV and 4 
                 keV, then the value of spectrum[1, i] is 3. If None, defaults
                 to the value stored in self.spectrum.
@@ -4203,7 +4215,7 @@ class GammaFlood(Experiment):
                 is shown.
                 (default: '')
             save:
-                If True, 'spectrum' will be saved as an ascii file. Parameters 
+                If True, 'spectrum' will be saved as an ascii file. Parameters
                 relevant to this saving are below
             data_dir: str
                 The directory to which the file will be saved, overriding any
@@ -4223,13 +4235,17 @@ class GammaFlood(Experiment):
             ext: str
                 The file name extension for the count_map file. 
                 (default: '.pdf')
+            etc: str
+                Other important information (e.g. masks used) that will be
+                appended to data and plot filenames.
+                (default: '')
 
         '''
         # Constructing a save path, if needed
         if save_plot:
             save_path = self.construct_path('plot', ext=plot_ext, 
                 save_dir=plot_dir, subdir=plot_subdir, 
-                description='energy_spectrum')
+                description='energy_spectrum', etc=etc)
 
         # If no spectrum is supplied take it from the instance.
         if spectrum is None:
