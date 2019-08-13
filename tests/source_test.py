@@ -1,6 +1,7 @@
 import nudetect as nd
 from nudetect import Source
 import pytest
+import os
 
 import pandas as pd
 
@@ -48,3 +49,4 @@ def test_csv_modification():
 
     s_init.set_source_alias('foo')
     assert s_init.slice_source_df()[1]['alias'] == 'foo'
+    os.remove('test_xray_sources.csv')
