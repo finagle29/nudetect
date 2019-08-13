@@ -13,23 +13,16 @@ classes inherits from an abstract 'Experiment' subclass, which contains
 methods and attributes shared amongst subclasses.
 '''
 
-# Packages for making life easier
-import os.path
-import string
-import argparse
-import datetime
-
 # Data analysis packages
 import numpy as np
 import pandas as pd
-from astropy.io import fits
 from astropy.modeling import models, fitting
-from astropy.table import Table
-import astropy.io.ascii as asciio
 
 # Plotting packages
 import matplotlib.pyplot as plt
-import matplotlib.cm # color map
+
+# Internal imports
+from .util import fits_to_df
 
 
 class Noise(Experiment):

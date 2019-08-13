@@ -16,20 +16,13 @@ methods and attributes shared amongst subclasses.
 # Packages for making life easier
 import os.path
 import string
-import argparse
 import datetime
 
 # Data analysis packages
-import numpy as np
 import pandas as pd
-from astropy.io import fits
-from astropy.modeling import models, fitting
-from astropy.table import Table
-import astropy.io.ascii as asciio
 
-# Plotting packages
-import matplotlib.pyplot as plt
-import matplotlib.cm # color map
+# Internal imports
+from .util import to_set, check_positive, check_channel, check_isotope_format
 
 
 ##
@@ -400,7 +393,7 @@ class Source:
         }
     }
 
-    pwd = os.path.dirname(os.path.abspath(__file__))
+    pwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # The directory in which 'lara'-style ascii files of emission line
     # data are stored.
@@ -408,7 +401,7 @@ class Source:
 
     # The directory that contains the CSV file of X-ray sources used by the 
     # detector test lab.
-    source_csv_path = os.path.join(pwd, 'xray_sources.csv')
+    source_csv_path = os.path.join(pwd, 'data', 'xray_sources.csv')
 
     # A DataFrame containing the sources used by the detector test lab.
     source_df = pd.read_csv(source_csv_path, 

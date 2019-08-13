@@ -13,23 +13,15 @@ classes inherits from an abstract 'Experiment' subclass, which contains
 methods and attributes shared amongst subclasses.
 '''
 
-# Packages for making life easier
-import os.path
-import string
-import argparse
-import datetime
-
 # Data analysis packages
 import numpy as np
-import pandas as pd
-from astropy.io import fits
 from astropy.modeling import models, fitting
-from astropy.table import Table
-import astropy.io.ascii as asciio
 
 # Plotting packages
 import matplotlib.pyplot as plt
-import matplotlib.cm # color map
+
+# Internal imports
+from .util import fits_to_df
 
 
 class GammaFlood(Experiment):
@@ -331,7 +323,7 @@ class GammaFlood(Experiment):
             plot_subdir: str
                 A path to a sub-directory of 'plot_dir' to which the file will
                 be saved. Empty curly braces '{}' are formatted the same way
-                as in 'plot_dir'. 
+                as in 'plot_dir'.
                 (default: '')
             plot_ext: str
                 The file name extension for the plot file.
