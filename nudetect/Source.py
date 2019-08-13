@@ -22,84 +22,8 @@ import datetime
 import pandas as pd
 
 # Internal imports
-from .util import to_set, check_positive, check_channel, check_isotope_format
-
-
-##
-## Functions and a class for managing radioisotope data.
-##
-
-# These functions are primarily helper functions.
-
-def parse_name(isotope):
-    '''
-    Returns a 2-tuple of the form (atomic symbol, mass number)
-    corresponding to the 'isotope' attribute.
-    '''
-    sym, num = '', ''
-    for char in isotope:
-        if char in string.ascii_letters:
-            sym += char
-        elif char in string.digits:
-            num += char
-
-    return sym, num
-
-
-def lara_to_df(filepath, energy_threshold=None):
-    '''
-    Reads the emission line data from the 'lara' ascii file for a nucleide
-    into a pandas DataFrame. Such files can be found using the nuclear
-    data table of the Laboratoire National Henri Becquirel, found at this 
-    link: http://www.lnhb.fr/nuclear-data/nuclear-data-table/
-
-    Argument:
-        filepath: str
-            The path to the 'lara' file.
-
-    Return: pandas.DataFrame
-        A DataFrame with emission line data and the following column names:
-            'Energy (keV)'
-            'Ener. unc. (keV)'
-            'Intensity (%)'
-            'Int. unc. (%)'
-            'Type':
-                indicates the type of X-ray using Seigenbach notation,
-                or indicates that the line is a gamma ray (I think).
-    '''
-    # 'header' is the 0-indexed line number where the column headers are.
-    # For these 'lara' files, the column headers are preceded by a long
-    # line of '-' characters.
-    header = 0
-    with open(filepath, 'r') as lara_file:
-        while True:
-            # Increment 'header' here since the header line is actually 
-            # the line after the line of '-'.
-            header += 1
-            line = lara_file.readline()
-            # Stop incrementing 'header' once we find the '-' line.
-            if '-' * 10 in line:
-                break
-            if not line:
-                raise EOFError("The 'lara_to_df' method looks for at least"
-                    " 10 '-' characters together in a line to indicate"
-                    " the location of the header row. Such a sequence"
-                    " was not found.")
-
-    # We set skipfooter=1 below because the lara files have a long line of
-    # '=' characters at the end of the emission line data.
-    df = pd.read_table(filepath, sep=' ; ', header=header, skipfooter=1,
-        engine='python')
-    if energy_threshold is not None:
-        # Make a boolean DataFrame that will cutoff values above an 
-        # energy threshold, e.g., 140 keV, from the output DataFrame.
-        df_bool = df.loc[:, 'Energy (keV)'] < energy_threshold
-    else:
-        # A lazy way to make a boolean DataFrame of all True.
-        df_bool = df.loc[:, 'Energy (keV)'] > 0
-    # Below we omit the columns 'Origin', 'Lvl. start', and 'Lvl. end', 
-    # which aren't really relevant to this module.
-    return df.loc[df_bool, 'Energy (keV)':'Type']
+from .util import (to_set, check_positive, check_channel, check_isotope_format,
+    parse_name, lara_to_df)
 
 
 # These functions are for handling the CSV file containing information about

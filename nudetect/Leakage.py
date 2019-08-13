@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 
 # Internal imports
 from .util import to_set
+from .Experiment import Experiment
 
 
 class Leakage(Experiment):

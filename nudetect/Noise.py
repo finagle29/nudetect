@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 
 # Internal imports
 from .util import fits_to_df
+from .Experiment import Experiment
 
 
 class Noise(Experiment):
